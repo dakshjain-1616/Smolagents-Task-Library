@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="500" viewBox="0 0 900 500" font-family="Segoe UI, Arial, sans-serif">
+
+  <!-- Background -->
+  <rect width="900" height="500" fill="#F8F9FA" rx="12"/>
+
+  <!-- ================================================================ -->
+  <!-- ROW 1: User Input / Gradio UI                                     -->
+  <!-- ================================================================ -->
+  <rect x="300" y="18" width="300" height="54" rx="10" fill="#2563EB"/>
+  <text x="450" y="40" text-anchor="middle" fill="white" font-size="13" font-weight="bold">User Input</text>
+  <text x="450" y="58" text-anchor="middle" fill="#BFDBFE" font-size="11">Gradio Web UI  (app.py)</text>
+
+  <!-- Arrow: UI → Dispatcher -->
+  <line x1="450" y1="72" x2="450" y2="108" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ================================================================ -->
+  <!-- ROW 2: Task Dispatcher                                            -->
+  <!-- ================================================================ -->
+  <rect x="300" y="108" width="300" height="54" rx="10" fill="#6B46C1"/>
+  <text x="450" y="130" text-anchor="middle" fill="white" font-size="13" font-weight="bold">Task Dispatcher</text>
+  <text x="450" y="148" text-anchor="middle" fill="#DDD6FE" font-size="11">Discovers &amp; routes to task_XX_*.py</text>
+
+  <!-- ================================================================ -->
+  <!-- ROW 3: Five Category Boxes                                        -->
+  <!-- Spread across x = 30, 200, 370, 540, 710  (width=130)            -->
+  <!-- ================================================================ -->
+
+  <!-- Arrow: Dispatcher → Category boxes -->
+  <!-- Fan-out line from dispatcher bottom center -->
+  <line x1="450" y1="162" x2="450" y2="198" stroke="#374151" stroke-width="1.5"/>
+  <!-- Horizontal bar -->
+  <line x1="95"  y1="198" x2="805" y2="198" stroke="#374151" stroke-width="1.5"/>
+  <!-- Verticals down to each box -->
+  <line x1="95"  y1="198" x2="95"  y2="218" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="265" y1="198" x2="265" y2="218" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="450" y1="198" x2="450" y2="218" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="635" y1="198" x2="635" y2="218" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="805" y1="198" x2="805" y2="218" stroke="#374151" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Category: Web Research (01-04) -->
+  <rect x="30"  y="218" width="130" height="66" rx="8" fill="#1D4ED8"/>
+  <text x="95"  y="239" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Web Research</text>
+  <text x="95"  y="256" text-anchor="middle" fill="#BFDBFE" font-size="9">Tasks 01-04</text>
+  <text x="95"  y="272" text-anchor="middle" fill="#BFDBFE" font-size="9">Web search &amp; analysis</text>
+
+  <!-- Category: File &amp; Data (05-08) -->
+  <rect x="200" y="218" width="130" height="66" rx="8" fill="#1D4ED8"/>
+  <text x="265" y="239" text-anchor="middle" fill="white" font-size="11" font-weight="bold">File &amp; Data</text>
+  <text x="265" y="256" text-anchor="middle" fill="#BFDBFE" font-size="9">Tasks 05-08</text>
+  <text x="265" y="272" text-anchor="middle" fill="#BFDBFE" font-size="9">CSV, DOCX, logs, code</text>
+
+  <!-- Category: Reasoning (09-12) -->
+  <rect x="385" y="218" width="130" height="66" rx="8" fill="#1D4ED8"/>
+  <text x="450" y="239" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Reasoning</text>
+  <text x="450" y="256" text-anchor="middle" fill="#BFDBFE" font-size="9">Tasks 09-12</text>
+  <text x="450" y="272" text-anchor="middle" fill="#BFDBFE" font-size="9">CoT, math, logic, decisions</text>
+
+  <!-- Category: Creative (13-16) -->
+  <rect x="570" y="218" width="130" height="66" rx="8" fill="#1D4ED8"/>
+  <text x="635" y="239" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Creative &amp; API</text>
+  <text x="635" y="256" text-anchor="middle" fill="#BFDBFE" font-size="9">Tasks 13-16</text>
+  <text x="635" y="272" text-anchor="middle" fill="#BFDBFE" font-size="9">Stories, code, email, data</text>
+
+  <!-- Category: Productivity (17-20) -->
+  <rect x="740" y="218" width="130" height="66" rx="8" fill="#1D4ED8"/>
+  <text x="805" y="239" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Productivity</text>
+  <text x="805" y="256" text-anchor="middle" fill="#BFDBFE" font-size="9">Tasks 17-20</text>
+  <text x="805" y="272" text-anchor="middle" fill="#BFDBFE" font-size="9">Quiz, args, schedule, docs</text>
+
+  <!-- ================================================================ -->
+  <!-- ROW 4: Agent layer                                                -->
+  <!-- Arrows from each category down to common agent bar               -->
+  <!-- ================================================================ -->
+  <line x1="95"  y1="284" x2="95"  y2="318" stroke="#374151" stroke-width="1.5"/>
+  <line x1="265" y1="284" x2="265" y2="318" stroke="#374151" stroke-width="1.5"/>
+  <line x1="450" y1="284" x2="450" y2="318" stroke="#374151" stroke-width="1.5"/>
+  <line x1="635" y1="284" x2="635" y2="318" stroke="#374151" stroke-width="1.5"/>
+  <line x1="805" y1="284" x2="805" y2="318" stroke="#374151" stroke-width="1.5"/>
+  <!-- Horizontal bar -->
+  <line x1="95"  y1="318" x2="805" y2="318" stroke="#374151" stroke-width="1.5"/>
+  <!-- Single arrow to agent box -->
+  <line x1="450" y1="318" x2="450" y2="338" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ToolCallingAgent / CodeAgent box -->
+  <rect x="270" y="338" width="360" height="54" rx="10" fill="#6B46C1"/>
+  <text x="450" y="360" text-anchor="middle" fill="white" font-size="13" font-weight="bold">ToolCallingAgent / CodeAgent</text>
+  <text x="450" y="378" text-anchor="middle" fill="#DDD6FE" font-size="11">smolagents agent orchestration layer</text>
+
+  <!-- Arrow: Agent → Model -->
+  <line x1="450" y1="392" x2="450" y2="418" stroke="#374151" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- HfApiModel box -->
+  <rect x="300" y="418" width="300" height="50" rx="10" fill="#374151"/>
+  <text x="450" y="438" text-anchor="middle" fill="white" font-size="13" font-weight="bold">HfApiModel</text>
+  <text x="450" y="455" text-anchor="middle" fill="#D1D5DB" font-size="11">HuggingFace Inference API</text>
+
+  <!-- ================================================================ -->
+  <!-- ROW 5: Tool Execution row                                         -->
+  <!-- ================================================================ -->
+
+  <!-- Arrows fanning out from model box to tools -->
+  <line x1="450" y1="468" x2="450" y2="480" stroke="#374151" stroke-width="1.5"/>
+  <line x1="120" y1="480" x2="780" y2="480" stroke="#374151" stroke-width="1.5"/>
+  <line x1="120" y1="480" x2="120" y2="488" stroke="#374151" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+  <line x1="300" y1="480" x2="300" y2="488" stroke="#374151" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+  <line x1="480" y1="480" x2="480" y2="488" stroke="#374151" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+  <line x1="660" y1="480" x2="660" y2="488" stroke="#374151" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+
+  <!-- Tool pills -->
+  <rect x="50"  y="488" width="140" height="24" rx="6" fill="#059669"/>
+  <text x="120" y="504" text-anchor="middle" fill="white" font-size="10" font-weight="bold">DuckDuckGoSearch</text>
+
+  <rect x="225" y="488" width="150" height="24" rx="6" fill="#059669"/>
+  <text x="300" y="504" text-anchor="middle" fill="white" font-size="10" font-weight="bold">File I/O (CSV, DOCX)</text>
+
+  <rect x="405" y="488" width="150" height="24" rx="6" fill="#059669"/>
+  <text x="480" y="504" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Code Execution</text>
+
+  <rect x="590" y="488" width="140" height="24" rx="6" fill="#059669"/>
+  <text x="660" y="504" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Custom Tools</text>
+
+  <!-- ================================================================ -->
+  <!-- Arrowhead markers                                                 -->
+  <!-- ================================================================ -->
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#374151"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+</svg>
