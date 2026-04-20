@@ -4,176 +4,68 @@
 >
 > [![VS Code Extension](https://img.shields.io/badge/VS%20Code-NEO%20Extension-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=NeoResearchInc.heyneo)  [![Cursor Extension](https://img.shields.io/badge/Cursor-NEO%20Extension-purple?logo=cursor)](https://marketplace.cursorapi.com/items/?itemName=NeoResearchInc.heyneo)
 
-## Architecture
+Twenty runnable agent tasks built on HuggingFace's [`smolagents`](https://github.com/huggingface/smolagents) — a reference collection for the framework that has no reference collection yet.
 
 ![Architecture](architecture.svg)
 
-## Overview
+## Why This Library Exists
 
-The **Smolagents Task Library** is a collection of 20 ready-to-run AI agent tasks built on top of [smolagents](https://github.com/huggingface/smolagents) and the HuggingFace Inference API. Every task exposes a simple `run()` function that can be called from the CLI or through the bundled Gradio web UI.
+`smolagents` picked up 4,100 GitHub stars in April 2026 on the strength of a simple pitch: a lightweight agent library with tool use and code execution that works against any model, hosted or local. It is genuinely good. It is also new — and new frameworks have the same problem every time. The README shows you a calculator agent. The documentation shows you a weather agent. Neither answers the question a developer actually has:
 
-Tasks span five categories: web research, file & data processing, reasoning, creative & API, and productivity. All tasks share a common configuration layer (`config.py`) that reads credentials from a `.env` file, making it straightforward to swap models or API keys without touching task code.
+**What does a real task look like?**
 
-## Installation
+Not a demo. Not a toy. Something that parses actual CSV files, something that reviews actual code, something that produces output an actual human would read and find useful. That gap is the reason `smolagents` adoption is bottlenecked on people who have enough time to reverse-engineer the patterns for themselves.
 
-**Requirements:** Python 3.9+
+This repository closes the gap. It is twenty concrete tasks, each one a complete working example of how to structure a real agentic job in `smolagents`. They are not intended to be novel research — they are intended to be the reference you copy from when you sit down to build your own agent and realise you do not know what the shape of one is supposed to look like.
 
-```bash
-# 1. Clone / download the project
-cd smolagents-task-library
+## What Is In It
 
-# 2. Install dependencies
-pip install -r requirements.txt
+Twenty self-contained tasks, organised into five categories. Every task is a standalone Python file with a `run()` function, a CLI entry point, and sensible defaults so it will execute the moment you hand it a `HF_TOKEN`.
 
-# 3. Configure credentials
-cp .env.example .env
-# Edit .env and fill in your HF_TOKEN (required for inference)
-```
+**Web research.** Structured-report web search, news digest from any topic, URL content analyser with HTML noise stripped, multi-source trend tracker with predictions.
+
+**File and data processing.** Pandas-backed CSV summariser with AI insight extraction, DOCX analyser that pulls both prose and tables and classifies the document type, log-file parser that categorises errors into P1/P2/P3, full code-quality reviewer with security and style notes.
+
+**Reasoning.** Chain-of-thought problem decomposition, step-by-step math solver backed by a `CodeAgent` that can actually execute Python for numeric verification, logic-puzzle solver, decision analyser that produces weighted pros/cons.
+
+**Creative and API integration.** Story generator with a custom `StoryGeneratorTool` (a worked example of writing your own `smolagents` tool), plain-English code explainer, tone-controlled email drafter, unstructured-text-to-structured-data formatter (JSON / CSV / Markdown tables).
+
+**Productivity.** Multiple-choice quiz builder with configurable difficulty, argument analyser with fallacy detection, meeting scheduler, document summariser with brief / detailed / bullet-point modes.
+
+A full index of the twenty tasks with filenames is available in `tasks/` — each file is named `task_NN_<slug>.py` and is readable top-to-bottom in a couple of minutes.
+
+## Why The Collection Is Structured This Way
+
+The twenty tasks are not arbitrary. They were chosen to cover the full surface of what `smolagents` was designed for:
+
+- **`ToolCallingAgent` vs `CodeAgent`.** The math solver and code reviewer show where you want the agent to execute Python mid-run; the email drafter and story generator show where you do not.
+- **Built-in tools vs custom tools.** Web-search tasks lean on `smolagents`' built-in tooling. The story generator ships its own `Tool` subclass — the single most common thing users want to know how to do and the single most underexplained part of the docs.
+- **Deterministic output shape.** Several tasks (log analyser, data formatter, quiz creator) return structured output the surrounding program can use, not free-form prose. This is the pattern most real applications actually need and most tutorials ignore.
+- **Model and provider indirection.** Every task imports its model configuration from a shared `config.py` so you can swap from HuggingFace Inference to OpenRouter to a local model without editing twenty files. This is the configuration layer teams always end up writing and rarely get right the first time.
+
+Read any three tasks and the `smolagents` surface area stops feeling abstract.
+
+## Two Ways To Run It
+
+**From the command line.** Every task file works as an executable — `python tasks/task_10_math_solver.py --problem "..."`. This is the mode you want for scripting, piping output into other tools, or running a task inside CI.
+
+**Through the Gradio web UI.** `python app.py` launches an interface that discovers every `task_XX_*.py` file in the directory, presents them in a dropdown, and lets anyone (not just the person who installed it) run a task by typing input into a textbox. This is the mode for sharing the library with teammates, or for publishing a Space on HuggingFace so the entire community can try the tasks without cloning anything.
 
 ## Configuration
 
-Copy `.env.example` to `.env` and set at minimum:
+All credentials and model choices live in `.env`. The only required variable is `HF_TOKEN`. `DEFAULT_MODEL` and `DEFAULT_PROVIDER` let you pick which model and inference provider every task uses, `OPENROUTER_API_KEY` is optional and only needed if you route through OpenRouter instead of HuggingFace Inference. A `.env.example` file ships with the repository.
 
-| Variable | Description |
-|---|---|
-| `HF_TOKEN` | HuggingFace API token (required) — get one at https://huggingface.co/settings/tokens |
-| `OPENROUTER_API_KEY` | Optional — only needed if routing through OpenRouter |
-| `DEFAULT_MODEL` | Model ID to use (default: `deepseek-ai/DeepSeek-V3.2`) |
-| `DEFAULT_PROVIDER` | Inference provider (default: `novita`) |
+## Who Should Use It
 
-## Tasks
+- **Developers evaluating `smolagents`** who need to see the framework holding up under real workloads before committing to it.
+- **Teams building internal agent tools** who want a set of working patterns to fork from rather than starting from the docs.
+- **Educators and content creators** who need concrete, varied examples to teach agent concepts against.
+- **Anyone who has opened the `smolagents` README, thought "that is cool, but what do I actually do with it," and closed the tab.**
 
-### Category 1 — Web Research (Tasks 01-04)
+## Tech Stack
 
-| # | File | Description |
-|---|---|---|
-| 01 | `task_01_web_search.py` | **Web Search & Research** — Runs a DuckDuckGo search and compiles a structured markdown research report. |
-| 02 | `task_02_news_summarizer.py` | **News Summarizer** — Fetches the top N news articles on any topic and produces a clean news digest. |
-| 03 | `task_03_website_analyzer.py` | **Website Analyzer** — Fetches a URL, strips HTML noise, and returns an AI-generated site analysis. |
-| 04 | `task_04_trend_tracker.py` | **Trend Tracker** — Searches for trends in a domain (technology, finance, health, etc.) and produces a trend report with predictions. |
-
-### Category 2 — File & Data Processing (Tasks 05-08)
-
-| # | File | Description |
-|---|---|---|
-| 05 | `task_05_csv_summarizer.py` | **CSV Summarizer** — Loads a CSV file with pandas, generates descriptive statistics, and asks the model for deeper insights. |
-| 06 | `task_06_docx_analyzer.py` | **DOCX Analyzer** — Extracts text and tables from a `.docx` file and classifies/structures the content (resume, invoice, meeting notes, etc.). |
-| 07 | `task_07_log_analyzer.py` | **Log Analyzer** — Parses log files (common timestamp + level formats), counts error/warning distribution, and AI-prioritises issues into P1/P2/P3. |
-| 08 | `task_08_code_reviewer.py` | **Code Reviewer** — Reads a source file, detects the language, and produces a full code-quality review with security and style notes. |
-
-### Category 3 — Reasoning (Tasks 09-12)
-
-| # | File | Description |
-|---|---|---|
-| 09 | `task_09_chain_of_thought.py` | **Chain of Thought** — Guides the agent to break any problem into explicit reasoning steps before answering. |
-| 10 | `task_10_math_solver.py` | **Math Solver** — Solves mathematical problems step by step; uses `CodeAgent` so it can execute Python for numeric verification. |
-| 11 | `task_11_logic_puzzle.py` | **Logic Puzzle Solver** — Accepts any logic/deductive puzzle and works through constraints to produce a justified solution. |
-| 12 | `task_12_decision_analyzer.py` | **Decision Analyzer** — Structures a decision using pros/cons, weighted factors, and risk assessment to output a clear recommendation. |
-
-### Category 4 — Creative & API Integration (Tasks 13-16)
-
-| # | File | Description |
-|---|---|---|
-| 13 | `task_13_story_generator.py` | **Story Generator** — Generates creative short/medium/long stories from a theme and genre using a custom `StoryGeneratorTool`. |
-| 14 | `task_14_code_explainer.py` | **Code Explainer** — Accepts a code snippet and language name, then produces a plain-English explanation with context. |
-| 15 | `task_15_email_drafter.py` | **Email Drafter** — Drafts professional emails for any purpose, recipient, and tone (formal/casual/friendly). |
-| 16 | `task_16_data_formatter.py` | **Data Formatter** — Takes unstructured text data and reformats it into JSON, CSV, or a markdown table. |
-
-### Category 5 — Productivity (Tasks 17-20)
-
-| # | File | Description |
-|---|---|---|
-| 17 | `task_17_quiz_creator.py` | **Quiz Creator** — Generates multiple-choice quizzes on any topic at a chosen difficulty level with answers. |
-| 18 | `task_18_argument_analyzer.py` | **Argument Analyzer** — Evaluates the logical structure of an argument, identifies fallacies, and rates its strength. |
-| 19 | `task_19_meeting_scheduler.py` | **Meeting Scheduler** — Suggests optimal meeting times given participants, duration, and scheduling constraints. |
-| 20 | `task_20_document_summarizer.py` | **Document Summarizer** — Condenses long documents into brief, detailed, or bullet-point summaries of configurable length. |
-
-## Usage
-
-### CLI (run any task directly)
-
-Each task is a self-contained Python script with a `run()` function and a CLI entry point:
-
-```bash
-# Task 01 — web search
-python tasks/task_01_web_search.py --query "latest developments in quantum computing"
-
-# Task 05 — CSV summarizer
-python tasks/task_05_csv_summarizer.py --file my_data.csv
-
-# Task 10 — math solver
-python tasks/task_10_math_solver.py --problem "Integrate x^2 from 0 to 3"
-
-# Task 13 — story generator
-python tasks/task_13_story_generator.py
-
-# Task 20 — document summarizer
-python tasks/task_20_document_summarizer.py
-```
-
-Or import and call `run()` directly from Python:
-
-```python
-import sys; sys.path.insert(0, ".")
-from tasks.task_01_web_search import run
-report = run("open source LLMs 2025")
-print(report)
-```
-
-### Gradio Web UI
-
-```bash
-python app.py
-# Opens at http://localhost:7860
-```
-
-The UI dynamically discovers all `task_XX_*.py` files, presents them in a dropdown, and lets you enter custom input before clicking **Run Task**. Leave the input blank to use each task's built-in default.
-
-## Project Structure
-
-```
-smolagents-task-library/
-├── app.py                    # Gradio web UI
-├── config.py                 # Shared configuration (model, tokens)
-├── requirements.txt
-├── .env.example              # Credential template
-├── architecture.svg          # Architecture diagram
-└── tasks/
-    ├── task_01_web_search.py
-    ├── task_02_news_summarizer.py
-    ├── task_03_website_analyzer.py
-    ├── task_04_trend_tracker.py
-    ├── task_05_csv_summarizer.py
-    ├── task_06_docx_analyzer.py
-    ├── task_07_log_analyzer.py
-    ├── task_08_code_reviewer.py
-    ├── task_09_chain_of_thought.py
-    ├── task_10_math_solver.py
-    ├── task_11_logic_puzzle.py
-    ├── task_12_decision_analyzer.py
-    ├── task_13_story_generator.py
-    ├── task_14_code_explainer.py
-    ├── task_15_email_drafter.py
-    ├── task_16_data_formatter.py
-    ├── task_17_quiz_creator.py
-    ├── task_18_argument_analyzer.py
-    ├── task_19_meeting_scheduler.py
-    └── task_20_document_summarizer.py
-```
-
-## Dependencies
-
-| Package | Purpose |
-|---|---|
-| `smolagents>=1.0.0` | Agent framework (ToolCallingAgent, CodeAgent, HfApiModel) |
-| `gradio>=4.0.0` | Web UI |
-| `huggingface-hub>=0.20.0` | Model access |
-| `python-dotenv>=1.0.0` | `.env` loading |
-| `requests>=2.31.0` | HTTP requests (task 03) |
-| `pandas>=2.0.0` | CSV analysis (task 05) |
-| `beautifulsoup4>=4.12.0` | HTML parsing (task 03) |
-| `python-docx` | DOCX extraction (task 06) |
+Python 3.9+, `smolagents` for the agent framework, `gradio` for the web UI, `huggingface-hub` for model access, `python-dotenv` for credentials, and task-specific libraries (`pandas`, `python-docx`, `beautifulsoup4`, `requests`) pulled in only where needed. Full list in `requirements.txt`.
 
 ## License
 
-MIT
+MIT.
